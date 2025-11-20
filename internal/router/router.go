@@ -24,6 +24,10 @@ func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Servic
 	}
 }
 
+func (r *Router) SetupRoutes() {
+	r.app.Post("/team/add", r.AddTeam)
+}
+
 func (r *Router) Start(_ context.Context) error {
 	return r.app.Server().ListenAndServe(":8080")
 }
