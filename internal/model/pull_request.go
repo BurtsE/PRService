@@ -12,8 +12,8 @@ const (
 
 type PullRequest struct {
 	Id        PullRequestID
-	AuthorId  UserId
-	Reviewers []UserId
+	AuthorId  UserID
+	Reviewers []UserID
 	Status    PullRequestStatus
 	CreatedAt time.Time
 	MergedAt  time.Time
