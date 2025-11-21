@@ -3,18 +3,23 @@ package pr_service
 import (
 	"PRService/internal/model"
 	"PRService/internal/service"
+	"PRService/internal/storage"
+	"github.com/sirupsen/logrus"
 )
 
 var _ service.Service = (*Service)(nil)
 
 type Service struct {
+	logger  *logrus.Logger
+	storage storage.Storage
 }
 
-func (s Service) CreateTeam(team *model.Team) error {
-	//TODO implement me
-	panic("implement me")
+func NewService(logger *logrus.Logger, storage storage.Storage) *Service {
+	return &Service{
+		logger:  logger,
+		storage: storage,
+	}
 }
-
 func (s Service) GetTeam(teamName string) (*model.Team, error) {
 	//TODO implement me
 	panic("implement me")

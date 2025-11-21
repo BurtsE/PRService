@@ -1,9 +1,12 @@
 package service
 
-import "PRService/internal/model"
+import (
+	"PRService/internal/model"
+	"context"
+)
 
 type Service interface {
-	CreateTeam(*model.Team) error
+	CreateTeam(context.Context, *model.Team) error
 	GetTeam(teamName string) (*model.Team, error)
 
 	SetUserIsActive(model.UserID) error
