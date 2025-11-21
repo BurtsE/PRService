@@ -5,6 +5,7 @@ import (
 	"PRService/internal/service"
 	"context"
 	"github.com/gofiber/fiber/v3"
+	fiberlogger "github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,6 +18,9 @@ type Router struct {
 func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Service) *Router {
 	app := fiber.New(fiber.Config{})
 	app.Server().Logger = logger
+	app.Use(fiberlogger.New(fiberlogger.Config{
+		Format: "[${time}] ${ip} ${method} ${path} ${status} - ${latency}\n",
+	}))
 	return &Router{
 		app:     app,
 		service: service,
@@ -26,10 +30,14 @@ func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Servic
 
 func (r *Router) SetupRoutes() {
 	r.app.Post("/team/add", r.AddTeam)
+	r.app.Get("/ping", func(c fiber.Ctx) error {
+		return c.JSON("pong")
+	})
 }
 
-func (r *Router) Start(_ context.Context) error {
-	return r.app.Server().ListenAndServe(":8080")
+func (r *Router) Start(_ context.Context, addr string) error {
+	r.SetupRoutes()
+	return r.app.Listen(addr)
 }
 
 func (r *Router) Stop(_ context.Context) error {

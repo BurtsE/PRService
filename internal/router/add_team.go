@@ -12,17 +12,22 @@ AddTeam creates or updates team
 Users are being created if not exist
 */
 func (r *Router) AddTeam(c fiber.Ctx) error {
-	var body *model.Team
-	if err := c.Bind().Body(body); err != nil {
+	var body model.Team
+	if err := c.Bind().Body(&body); err != nil {
+		r.logger.Warn(err)
 		return c.
 			Status(http.StatusBadRequest).
 			JSON(errors.NewErrorResponse(errors.ResourceNotFound))
 	}
-
-	err := r.service.CreateTeam(body)
+	r.logger.Debugf("AddTeam %+v", body)
+	err := r.service.CreateTeam(c.Context(), &body)
 	if err != nil {
-		return c.Status(http.StatusBadRequest).JSON(err)
+		return c.
+			Status(http.StatusBadRequest).
+			JSON(err)
 	}
 
-	return c.Status(http.StatusCreated).JSON(body)
+	return c.Status(http.StatusCreated).JSON(map[string]any{
+		"team": body,
+	})
 }

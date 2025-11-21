@@ -6,6 +6,7 @@ import (
 	"PRService/internal/service/pr_service"
 	"PRService/internal/storage/postgres"
 	"context"
+	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -61,13 +62,15 @@ func (a *App) Router() *router.Router {
 }
 
 func (a *App) Start(ctx context.Context) error {
-	return a.Router().Start(ctx)
+	a.Logger().Info("Starting server on port: ", a.Config().Server.Port)
+	return a.Router().Start(ctx, fmt.Sprintf(":%s", a.Config().Server.Port))
 }
 
 func (a *App) Shutdown(ctx context.Context) error {
-	a.Logger().Info("closing databasse...")
+	a.Logger().Info("closing database...")
 	_ = a.postgres.Close(ctx)
 	a.Logger().Info("shutting down server...")
 	_ = a.Router().Stop(ctx)
 	a.Logger().Info("app closed")
+	return nil
 }

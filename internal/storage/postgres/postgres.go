@@ -15,7 +15,7 @@ type Repository struct {
 }
 
 func NewRepository(cfg *config.Config) (*Repository, error) {
-	DSN := fmt.Sprintf("host = %s dbname=%s user=%s password=%s  sslmode=disable",
+	DSN := fmt.Sprintf("host=%s dbname=%s user=%s password=%s sslmode=disable",
 		cfg.Postgres.Host,
 		cfg.Postgres.Database,
 		cfg.Postgres.User,
