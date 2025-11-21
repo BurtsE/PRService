@@ -21,7 +21,8 @@ func (r *Router) AddTeam(c fiber.Ctx) error {
 
 	err := r.service.CreateTeam(body)
 	if err != nil {
-
+		return c.Status(http.StatusBadRequest).JSON(err)
 	}
+
 	return c.Status(http.StatusCreated).JSON(body)
 }
