@@ -3,7 +3,10 @@
     "port": "8080"
   },
   "database": {
-    "host": "localhost",
+    "host": "postgres",
+    "user": "dbuser",
+    "database": "dbname",
+    "password": "dbpass",
     "port": "port"
   }
 }

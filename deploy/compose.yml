@@ -1,0 +1,38 @@
+name: pr_service
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpass
+      POSTGRES_DB: dbname
+    volumes:
+      - ../internal/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U dbuser -d dbname" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+  service:
+    build:
+      context: ../.
+      dockerfile: ./build/Dockerfile
+    container_name: service
+    environment:
+        ENV: "development"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+
+
+networks:
+  internal:
