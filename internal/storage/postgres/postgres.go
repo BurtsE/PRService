@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"PRService/internal/config"
-	"PRService/internal/model"
 	"PRService/internal/storage"
 	"context"
 	"fmt"
@@ -34,4 +33,8 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 	return &Repository{
 		c: c,
 	}, nil
+}
+
+func (r *Repository) Close(ctx context.Context) error {
+	return r.c.Close(ctx)
 }

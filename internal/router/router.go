@@ -31,3 +31,7 @@ func (r *Router) SetupRoutes() {
 func (r *Router) Start(_ context.Context) error {
 	return r.app.Server().ListenAndServe(":8080")
 }
+
+func (r *Router) Stop(_ context.Context) error {
+	return r.app.Server().Shutdown()
+}
