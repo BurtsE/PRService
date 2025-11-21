@@ -11,11 +11,16 @@ const (
 	ReviewerNotAssigned  ErrorCode = "NOT_ASSIGNED"
 	ReviewersUnavailable ErrorCode = "NO_CANDIDATE"
 	ResourceNotFound     ErrorCode = "NOT_FOUND"
+	InternalServerError  ErrorCode = "INTERNAL_SERVER_ERROR"
 )
 
 type ErrorResponse struct {
 	Code    ErrorCode `json:"code"`
 	Message string    `json:"message"`
+}
+
+func (e ErrorResponse) Error() string {
+	return e.Message
 }
 
 func NewErrorResponse(code ErrorCode) *ErrorResponse {
@@ -49,6 +54,11 @@ func NewErrorResponse(code ErrorCode) *ErrorResponse {
 		return &ErrorResponse{
 			Code:    ResourceNotFound,
 			Message: "resource not found",
+		}
+	case InternalServerError:
+		return &ErrorResponse{
+			Code:    InternalServerError,
+			Message: "internal server error",
 		}
 	default:
 		return &ErrorResponse{
