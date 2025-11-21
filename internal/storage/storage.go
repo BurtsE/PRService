@@ -1,15 +1,21 @@
 package storage
 
-import "PRService/internal/model"
+import (
+	"PRService/internal/model"
+	"context"
+)
 
 type Storage interface {
-	CreateTeam(*model.Team) error
-	GetTeam(teamName string) (*model.Team, error)
+	TeamExists(context.Context, model.TeamName) (bool, error)
+	CreateTeam(context.Context, *model.Team) error
+	GetTeam(context.Context, model.TeamName) (*model.Team, error)
 
-	SetUserIsActive(model.UserID) error
-	GetReviewersPRs(model.UserID) ([]model.PullRequest, error)
+	UserExists(context.Context, model.UserID) (bool, error)
+	SetUserIsActive(context.Context, model.UserID) error
+	GetReviewersPRs(context.Context, model.UserID) ([]model.PullRequest, error)
 
-	CreatePullRequest(model.PullRequest) error
-	MergePullRequest(model.PullRequestID) (*model.PullRequest, error)
-	ReassignPullRequestReviewer(model.PullRequestID, model.UserID) error
+	PullRequestExists(context.Context, model.PullRequestID) (bool, error)
+	CreatePullRequest(context.Context, model.PullRequest) error
+	MergePullRequest(context.Context, model.PullRequestID) (*model.PullRequest, error)
+	ReassignPullRequestReviewer(context.Context, model.PullRequestID, model.UserID) error
 }

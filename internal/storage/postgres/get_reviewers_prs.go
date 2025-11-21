@@ -1,8 +1,11 @@
 package postgres
 
-import "PRService/internal/model"
+import (
+	"PRService/internal/model"
+	"context"
+)
 
-func (r Repository) GetReviewersPRs(id model.UserID) ([]model.PullRequest, error) {
+func (r *Repository) GetReviewersPRs(ctx context.Context, id model.UserID) ([]model.PullRequest, error) {
 	//TODO implement me
 	panic("implement me")
 }

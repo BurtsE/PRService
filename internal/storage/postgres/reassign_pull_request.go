@@ -1,8 +1,11 @@
 package postgres
 
-import "PRService/internal/model"
+import (
+	"PRService/internal/model"
+	"context"
+)
 
-func (r Repository) ReassignPullRequestReviewer(id model.PullRequestID, id2 model.UserID) error {
+func (r *Repository) ReassignPullRequestReviewer(ctx context.Context, id model.PullRequestID, id2 model.UserID) error {
 	//TODO implement me
 	panic("implement me")
 }

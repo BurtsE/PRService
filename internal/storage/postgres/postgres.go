@@ -2,13 +2,14 @@ package postgres
 
 import (
 	"PRService/internal/config"
-	"PRService/internal/service"
+	"PRService/internal/model"
+	"PRService/internal/storage"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5"
 )
 
-var _ service.Service = (*Repository)(nil)
+var _ storage.Storage = (*Repository)(nil)
 
 type Repository struct {
 	c *pgx.Conn
