@@ -6,3 +6,10 @@ type User struct {
 	Name     string `json:"username"`
 	IsActive bool   `json:"is_active"`
 }
+
+func (u *User) Valid() bool {
+	if u == nil || u.Id == "" {
+		return false
+	}
+	return true
+}
