@@ -56,5 +56,6 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 	if err = tx.Commit(ctx); err != nil {
 		return err
 	}
+
 	return nil
 }
