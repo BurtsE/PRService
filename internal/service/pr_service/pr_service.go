@@ -21,27 +21,22 @@ func NewService(logger *logrus.Logger, storage storage.Storage) *Service {
 	}
 }
 
-func (s Service) SetUserIsActive(id model.UserID) error {
+func (s *Service) GetReviewersPRs(id model.UserID) ([]model.PullRequest, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s Service) GetReviewersPRs(id model.UserID) ([]model.PullRequest, error) {
+func (s *Service) CreatePullRequest(request model.PullRequest) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s Service) CreatePullRequest(request model.PullRequest) error {
+func (s *Service) MergePullRequest(id model.PullRequestID) (*model.PullRequest, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s Service) MergePullRequest(id model.PullRequestID) (*model.PullRequest, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s Service) ReassignPullRequestReviewer(id model.PullRequestID, id2 model.UserID) error {
+func (s *Service) ReassignPullRequestReviewer(id model.PullRequestID, id2 model.UserID) error {
 	//TODO implement me
 	panic("implement me")
 }

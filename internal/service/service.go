@@ -9,7 +9,7 @@ type Service interface {
 	CreateTeam(context.Context, *model.Team) error
 	GetTeam(context.Context, model.TeamName) (*model.Team, error)
 
-	SetUserIsActive(model.UserID) error
+	SetUserIsActive(context.Context, *model.User) error
 	GetReviewersPRs(model.UserID) ([]model.PullRequest, error)
 
 	CreatePullRequest(model.PullRequest) error

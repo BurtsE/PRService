@@ -11,7 +11,7 @@ type Storage interface {
 	GetTeam(context.Context, model.TeamName) (*model.Team, error)
 
 	UserExists(context.Context, model.UserID) (bool, error)
-	SetUserIsActive(context.Context, model.UserID) error
+	SetUserIsActive(context.Context, *model.User) error
 	GetReviewersPRs(context.Context, model.UserID) ([]model.PullRequest, error)
 
 	PullRequestExists(context.Context, model.PullRequestID) (bool, error)
