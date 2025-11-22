@@ -42,8 +42,8 @@ func (r *Repository) GetPullRequest(ctx context.Context, id model.PullRequestID)
 	}
 	defer rows.Close()
 
+	var userID model.UserID
 	for rows.Next() {
-		var userID model.UserID
 		err = rows.Scan(&userID)
 		if err != nil {
 			return model.PullRequest{}, err
