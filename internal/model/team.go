@@ -11,8 +11,8 @@ func (t *Team) Valid() bool {
 		return false
 	}
 
-	for _, member := range t.Members {
-		if !member.Valid() {
+	for i := range t.Members {
+		if !t.Members[i].Valid() {
 			return false
 		}
 	}

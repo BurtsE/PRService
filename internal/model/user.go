@@ -8,7 +8,7 @@ type User struct {
 }
 
 func (u *User) Valid() bool {
-	if u == nil || u.Id == "" {
+	if u == nil || len(u.Id) == 0 {
 		return false
 	}
 	return true

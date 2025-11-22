@@ -17,14 +17,32 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 		return err
 	}
 
-	// Ensure members exist in users table and add to team_members
-	for _, u := range team.Members {
-		if _, err = tx.Exec(ctx, `INSERT INTO users (id, name, is_active) VALUES ($1, $2, COALESCE($3, TRUE))
-                                   ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name`, u.Id, u.Name, u.IsActive); err != nil {
+	// Only update name if a non-empty value is provided; otherwise preserve existing name
+	userInsertQuery := `
+		INSERT INTO users (id, name, is_active) 
+		VALUES ($1, $2, COALESCE($3, TRUE) ) 
+		ON CONFLICT (id) DO 
+		UPDATE 
+		SET 
+		  name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE users.name END, 
+		  is_active = COALESCE(
+			EXCLUDED.is_active, users.is_active
+		  )
+		RETURNING name
+	`
+	teamMemberInsertQuery := `
+		INSERT INTO team_members (team_name, user_id)
+		VALUES ($1, $2)
+        ON CONFLICT (team_name, user_id) DO NOTHING
+	`
+	for i := range team.Members {
+		err = tx.QueryRow(ctx, userInsertQuery, team.Members[i].Id, team.Members[i].Name, team.Members[i].IsActive).
+			Scan(&team.Members[i].Name)
+		if err != nil {
 			return err
 		}
-		if _, err = tx.Exec(ctx, `INSERT INTO team_members (team_name, user_id) VALUES ($1, $2)
-                                   ON CONFLICT (team_name, user_id) DO NOTHING`, team.Name, u.Id); err != nil {
+		
+		if _, err = tx.Exec(ctx, teamMemberInsertQuery, team.Name, team.Members[i].Id); err != nil {
 			return err
 		}
 	}

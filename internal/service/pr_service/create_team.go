@@ -20,5 +20,6 @@ func (s *Service) CreateTeam(ctx context.Context, team *model.Team) error {
 		s.logger.Warn(err)
 		return errors.NewErrorResponse(errors.InternalServerError)
 	}
+
 	return nil
 }
