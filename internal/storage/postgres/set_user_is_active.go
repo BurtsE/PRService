@@ -3,18 +3,19 @@ package postgres
 import (
 	"PRService/internal/model"
 	"context"
-	"github.com/jackc/pgx/v5"
 )
 
 func (r *Repository) SetUserIsActive(ctx context.Context, user *model.User) error {
 	// Mark the user as active. If the user does not exist, return an error.
-	cmdTag, err := r.c.Exec(ctx, `UPDATE users SET is_active = $1 WHERE id = $2`, user.Id, user.IsActive)
+	query := `
+		UPDATE users SET is_active = $1 WHERE id = $2
+		RETURNING id, name, team_name, is_active
+	`
+	err := r.c.QueryRow(ctx, query, user.IsActive, user.Id).
+		Scan(&user.Id, &user.Name, &user.TeamName, &user.IsActive)
 	if err != nil {
 		return err
 	}
-	if cmdTag.RowsAffected() == 0 {
-		// No user updated; user not found
-		return pgx.ErrNoRows
-	}
+
 	return nil
 }

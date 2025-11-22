@@ -27,7 +27,8 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 		  name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE users.name END, 
 		  is_active = COALESCE(
 			EXCLUDED.is_active, users.is_active
-		  )
+		  ),
+		  team_name = EXCLUDED.team_name
 		RETURNING name
 	`
 

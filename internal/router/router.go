@@ -31,6 +31,9 @@ func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Servic
 func (r *Router) SetupRoutes() {
 	r.app.Post("/team/add", r.CreateTeam)
 	r.app.Get("/team/get", r.getTeam)
+
+	r.app.Post("/users/setIsActive", r.SetUserIsActive)
+
 	r.app.Get("/ping", func(c fiber.Ctx) error {
 		return c.JSON("pong")
 	})
