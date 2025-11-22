@@ -26,8 +26,3 @@ func (s *Service) GetReviewersPRs(ctx context.Context, id model.UserID) ([]model
 	//TODO implement me
 	panic("implement me")
 }
-
-func (s *Service) ReassignPullRequestReviewer(id model.PullRequestID, id2 model.UserID) error {
-	//TODO implement me
-	panic("implement me")
-}
