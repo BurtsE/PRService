@@ -20,10 +20,6 @@ func NewService(logger *logrus.Logger, storage storage.Storage) *Service {
 		storage: storage,
 	}
 }
-func (s Service) GetTeam(teamName string) (*model.Team, error) {
-	//TODO implement me
-	panic("implement me")
-}
 
 func (s Service) SetUserIsActive(id model.UserID) error {
 	//TODO implement me

@@ -30,6 +30,7 @@ func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Servic
 
 func (r *Router) SetupRoutes() {
 	r.app.Post("/team/add", r.AddTeam)
+	r.app.Get("/team/get", r.getTeam)
 	r.app.Get("/ping", func(c fiber.Ctx) error {
 		return c.JSON("pong")
 	})

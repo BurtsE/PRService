@@ -3,6 +3,7 @@ package router
 import (
 	"PRService/internal/errors"
 	"PRService/internal/model"
+	"encoding/json"
 	"github.com/gofiber/fiber/v3"
 	"net/http"
 )
@@ -13,7 +14,7 @@ Users are being created if not exist
 */
 func (r *Router) AddTeam(c fiber.Ctx) error {
 	var body model.Team
-	if err := c.Bind().Body(&body); err != nil {
+	if err := json.Unmarshal(c.Body(), &body); err != nil {
 		r.logger.Warn(err)
 		return c.
 			Status(http.StatusBadRequest).
