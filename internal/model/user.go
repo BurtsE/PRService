@@ -4,7 +4,7 @@ type UserID string
 type User struct {
 	Id       UserID   `json:"user_id"`
 	Name     string   `json:"username"`
-	TeamName TeamName `json:"team_name"`
+	TeamName TeamName `json:"-"`
 	IsActive bool     `json:"is_active"`
 }
 

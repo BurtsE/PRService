@@ -11,7 +11,7 @@ import (
 AddTeam creates or updates team
 Users are being created if not exist
 */
-func (r *Router) AddTeam(c fiber.Ctx) error {
+func (r *Router) CreateTeam(c fiber.Ctx) error {
 	var body model.Team
 	if err := c.Bind().Body(&body); err != nil || !body.Valid() {
 		r.logger.Warn(err)

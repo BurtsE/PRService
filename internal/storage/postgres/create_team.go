@@ -20,7 +20,7 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 	// Only update name if a non-empty value is provided; otherwise preserve existing name
 	userInsertQuery := `
 		INSERT INTO users (id, name, team_name, is_active) 
-		VALUES ($1, $2, COALESCE($3, TRUE) ) 
+		VALUES ($1, $2, $3, COALESCE($4, TRUE) ) 
 		ON CONFLICT (id) DO 
 		UPDATE 
 		SET 

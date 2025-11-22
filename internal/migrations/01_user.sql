@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS users (
-    id VARCHAR(64) PRIMARY KEY,
-    team_name TEXT NOT NULL REFERENCES teams(name),
-    name TEXT NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE
-);
