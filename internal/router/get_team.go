@@ -15,7 +15,7 @@ func (r *Router) getTeam(c fiber.Ctx) error {
 	}
 	team, err := r.service.GetTeam(c.Context(), model.TeamName(name))
 	if err != nil {
-		return err
+		return c.JSON(err)
 	}
 
 	return c.JSON(team)
