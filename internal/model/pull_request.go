@@ -11,9 +11,9 @@ const (
 )
 
 type PullRequest struct {
-	Id        PullRequestID     `json:"pull_request_id"`
+	ID        PullRequestID     `json:"pull_request_id"`
 	Name      string            `json:"pull_request_name"`
-	AuthorId  UserID            `json:"author_id"`
+	AuthorID  UserID            `json:"author_id"`
 	Reviewers []UserID          `json:"assigned_reviewers"`
 	Status    PullRequestStatus `json:"status"`
 	CreatedAt time.Time         `json:"-"`
@@ -21,7 +21,7 @@ type PullRequest struct {
 }
 
 func (p *PullRequest) Valid() bool {
-	return len(p.Id) != 0 && len(p.AuthorId) != 0 && len(p.Name) != 0
+	return len(p.ID) != 0 && len(p.AuthorID) != 0 && len(p.Name) != 0
 }
 
 func (p *PullRequest) Init() {

@@ -9,7 +9,7 @@ import (
 func (r *Router) reassignPullRequestReviewer(c fiber.Ctx) error {
 	var body struct {
 		PullRequestID model.PullRequestID `json:"pull_request_id"`
-		UserID        model.UserID        `json:"user_id"`
+		UserID        model.UserID        `json:"old_reviewer_id"`
 	}
 	if err := c.Bind().Body(&body); err != nil {
 		return r.ProcessError(c, err)

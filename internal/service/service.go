@@ -24,5 +24,5 @@ type Service interface {
 
 	CreatePullRequest(context.Context, *model.PullRequest) error
 	MergePullRequest(context.Context, model.PullRequestID) (*model.PullRequest, error)
-	ReassignPullRequestReviewer(context.Context, model.PullRequestID, model.UserID) (*model.PullRequest, error)
+	ReassignPullRequestReviewer(context.Context, model.PullRequestID, model.UserID) (model.PullRequest, error)
 }

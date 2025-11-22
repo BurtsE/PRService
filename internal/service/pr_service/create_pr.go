@@ -4,18 +4,16 @@ import (
 	"PRService/internal/model"
 	"PRService/internal/service"
 	"context"
+	"errors"
 )
 
 func (s *Service) CreatePullRequest(ctx context.Context, request *model.PullRequest) error {
-	exists, err := s.storage.PullRequestExists(ctx, request.Id)
-	if err != nil {
+	_, err := s.storage.GetPullRequest(ctx, request.ID)
+	if err != nil && !errors.Is(err, service.ErrResourceNotFound) {
 		return err
 	}
-	if exists {
-		return service.ErrPullRequestExists
-	}
 
-	exists, err = s.storage.UserExists(ctx, request.AuthorId)
+	exists, err := s.storage.UserExists(ctx, request.AuthorID)
 	if err != nil {
 		return err
 	}

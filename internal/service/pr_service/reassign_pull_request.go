@@ -7,20 +7,31 @@ import (
 )
 
 func (s *Service) ReassignPullRequestReviewer(ctx context.Context,
-	pullRequestID model.PullRequestID, userID model.UserID) (*model.PullRequest, error) {
+	pullRequestID model.PullRequestID, userID model.UserID) (model.PullRequest, error) {
 
-	exists, err := s.storage.PullRequestExists(ctx, pullRequestID)
+	request, err := s.storage.GetPullRequest(ctx, pullRequestID)
 	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, service.ErrResourceNotFound
+		return model.PullRequest{}, err
 	}
 
-	pullRequest, err := s.storage.ReassignPullRequestReviewer(ctx, pullRequestID, userID)
+	if request.Status == model.PullRequestStatusMerged {
+		return model.PullRequest{}, service.ErrPullRequestMerged
+	}
+
+	var found bool
+	for i := range request.Reviewers {
+		if request.Reviewers[i] == userID {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return model.PullRequest{}, service.ErrResourceNotFound
+	}
+	err = s.storage.ReassignPullRequestReviewer(ctx, &request, userID)
 	if err != nil {
-		return nil, err
+		return model.PullRequest{}, err
 	}
 
-	return pullRequest, nil
+	return request, nil
 }

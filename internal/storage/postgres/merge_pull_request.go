@@ -21,9 +21,9 @@ func (r *Repository) MergePullRequest(ctx context.Context, requestID model.PullR
 
 	var pr model.PullRequest
 	err = tx.QueryRow(ctx, query, requestID, model.PullRequestStatusMerged).Scan(
-		&pr.Id,
+		&pr.ID,
 		&pr.Name,
-		&pr.AuthorId,
+		&pr.AuthorID,
 		&pr.Status,
 		&pr.CreatedAt,
 		&pr.MergedAt,

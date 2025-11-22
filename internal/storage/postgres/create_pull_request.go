@@ -18,7 +18,7 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
 
-	_, err = tx.Exec(ctx, query, request.Id, request.Name, request.AuthorId, request.Status, request.CreatedAt, request.MergedAt)
+	_, err = tx.Exec(ctx, query, request.ID, request.Name, request.AuthorID, request.Status, request.CreatedAt, request.MergedAt)
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 		INSERT INTO pull_request_reviewers(pull_request_id, user_id)
 			SELECT $1, id
 			FROM users
-			where
+			WHERE
 			    team_name = (SELECT team_name FROM users where id = $2)
 				AND is_active = true
 				AND id != $2
@@ -36,7 +36,7 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 		RETURNING user_id
 	`
 
-	rows, err := tx.Query(ctx, query, request.Id, request.AuthorId)
+	rows, err := tx.Query(ctx, query, request.ID, request.AuthorID)
 	if err != nil {
 		return err
 	}
