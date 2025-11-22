@@ -15,7 +15,7 @@ type Storage interface {
 	GetReviewersPRs(context.Context, model.UserID) ([]model.PullRequest, error)
 
 	PullRequestExists(context.Context, model.PullRequestID) (bool, error)
-	CreatePullRequest(context.Context, model.PullRequest) error
+	CreatePullRequest(context.Context, *model.PullRequest) error
 	MergePullRequest(context.Context, model.PullRequestID) (*model.PullRequest, error)
 	ReassignPullRequestReviewer(context.Context, model.PullRequestID, model.UserID) error
 }

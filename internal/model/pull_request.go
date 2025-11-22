@@ -18,3 +18,7 @@ type PullRequest struct {
 	CreatedAt time.Time
 	MergedAt  time.Time
 }
+
+func (p *PullRequest) Valid() bool {
+	return p.Id != "" && p.AuthorId != ""
+}
