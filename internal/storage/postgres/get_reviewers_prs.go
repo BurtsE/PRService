@@ -8,9 +8,9 @@ import (
 func (r *Repository) GetReviewersPRs(ctx context.Context, userID model.UserID) ([]model.PullRequest, error) {
 	var prIDs []model.PullRequestID
 	query := `
-		SELECT request_id
+		SELECT pull_request_id
 		FROM pull_request_reviewers
-		WHERE reviewer_id = $1
+		WHERE user_id = $1
 	`
 	rows, err := r.c.Query(ctx, query, userID)
 	if err != nil {
