@@ -33,6 +33,7 @@ func (r *Router) SetupRoutes() {
 	r.app.Get("/team/get", r.getTeam)
 
 	r.app.Post("/users/setIsActive", r.setUserIsActive)
+	r.app.Get("/users/getReview", r.getReview)
 
 	r.app.Post("/pullRequest/create", r.createPullRequest)
 	r.app.Post("/pullRequest/merge", r.mergePullRequest)
