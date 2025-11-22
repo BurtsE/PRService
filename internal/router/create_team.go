@@ -1,7 +1,6 @@
 package router
 
 import (
-	"PRService/internal/errors"
 	"PRService/internal/model"
 	"github.com/gofiber/fiber/v3"
 	"net/http"
@@ -12,23 +11,18 @@ AddTeam creates or updates team
 Users are being created if not exist
 */
 func (r *Router) CreateTeam(c fiber.Ctx) error {
-	var body model.Team
-	if err := c.Bind().Body(&body); err != nil || !body.Valid() {
-		r.logger.Warn(err)
-		return c.
-			Status(fiber.StatusBadRequest).
-			JSON(errors.NewErrorResponse(errors.ResourceNotFound))
+	var team model.Team
+	if err := c.Bind().Body(&team); err != nil || !team.Valid() {
+		return r.ProcessError(c, err)
 	}
 
-	r.logger.Debugf("AddTeam %+v", body)
-	err := r.service.CreateTeam(c.Context(), &body)
+	r.logger.Debugf("AddTeam %+v", team)
+	err := r.service.CreateTeam(c.Context(), &team)
 	if err != nil {
-		return c.
-			Status(fiber.StatusBadRequest).
-			JSON(err)
+		return r.ProcessError(c, err)
 	}
 
 	return c.Status(http.StatusCreated).JSON(map[string]any{
-		"team": body,
+		"team": team,
 	})
 }
