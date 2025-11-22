@@ -19,7 +19,7 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 
 	// Only update name if a non-empty value is provided; otherwise preserve existing name
 	userInsertQuery := `
-		INSERT INTO users (id, name, is_active) 
+		INSERT INTO users (id, name, team_name, is_active) 
 		VALUES ($1, $2, COALESCE($3, TRUE) ) 
 		ON CONFLICT (id) DO 
 		UPDATE 
@@ -30,19 +30,15 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 		  )
 		RETURNING name
 	`
-	teamMemberInsertQuery := `
-		INSERT INTO team_members (team_name, user_id)
-		VALUES ($1, $2)
-        ON CONFLICT (team_name, user_id) DO NOTHING
-	`
+
 	for i := range team.Members {
-		err = tx.QueryRow(ctx, userInsertQuery, team.Members[i].Id, team.Members[i].Name, team.Members[i].IsActive).
-			Scan(&team.Members[i].Name)
+		err = tx.QueryRow(ctx, userInsertQuery,
+			team.Members[i].Id,
+			team.Members[i].Name,
+			team.Name,
+			team.Members[i].IsActive,
+		).Scan(&team.Members[i].Name)
 		if err != nil {
-			return err
-		}
-		
-		if _, err = tx.Exec(ctx, teamMemberInsertQuery, team.Name, team.Members[i].Id); err != nil {
 			return err
 		}
 	}
