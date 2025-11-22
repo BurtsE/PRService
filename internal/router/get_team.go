@@ -15,8 +15,10 @@ func (r *Router) getTeam(c fiber.Ctx) error {
 	}
 	team, err := r.service.GetTeam(c.Context(), model.TeamName(name))
 	if err != nil {
-		return c.JSON(err)
+		return c.
+			Status(fiber.StatusNotFound).
+			JSON(err)
 	}
 
-	return c.JSON(team)
+	return c.Status(fiber.StatusOK).JSON(team)
 }

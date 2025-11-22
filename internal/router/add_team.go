@@ -16,7 +16,7 @@ func (r *Router) AddTeam(c fiber.Ctx) error {
 	if err := c.Bind().Body(&body); err != nil || !body.Valid() {
 		r.logger.Warn(err)
 		return c.
-			Status(http.StatusBadRequest).
+			Status(fiber.StatusBadRequest).
 			JSON(errors.NewErrorResponse(errors.ResourceNotFound))
 	}
 
@@ -24,7 +24,7 @@ func (r *Router) AddTeam(c fiber.Ctx) error {
 	err := r.service.CreateTeam(c.Context(), &body)
 	if err != nil {
 		return c.
-			Status(http.StatusBadRequest).
+			Status(fiber.StatusBadRequest).
 			JSON(err)
 	}
 
