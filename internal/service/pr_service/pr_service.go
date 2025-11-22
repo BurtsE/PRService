@@ -27,11 +27,6 @@ func (s *Service) GetReviewersPRs(ctx context.Context, id model.UserID) ([]model
 	panic("implement me")
 }
 
-func (s *Service) MergePullRequest(id model.PullRequestID) (*model.PullRequest, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (s *Service) ReassignPullRequestReviewer(id model.PullRequestID, id2 model.UserID) error {
 	//TODO implement me
 	panic("implement me")
