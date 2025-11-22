@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func (r *Router) CreatePullRequest(c fiber.Ctx) error {
+func (r *Router) createPullRequest(c fiber.Ctx) error {
 	var request model.PullRequest
 	if err := c.Bind().Body(&request); err != nil || !request.Valid() {
 		r.logger.Warn(err)

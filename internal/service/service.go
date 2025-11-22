@@ -23,6 +23,6 @@ type Service interface {
 	GetReviewersPRs(context.Context, model.UserID) ([]model.PullRequest, error)
 
 	CreatePullRequest(context.Context, *model.PullRequest) error
-	MergePullRequest(model.PullRequestID) (*model.PullRequest, error)
+	MergePullRequest(context.Context, model.PullRequestID) (*model.PullRequest, error)
 	ReassignPullRequestReviewer(model.PullRequestID, model.UserID) error
 }

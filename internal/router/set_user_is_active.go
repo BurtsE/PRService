@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func (r *Router) SetUserIsActive(c fiber.Ctx) error {
+func (r *Router) setUserIsActive(c fiber.Ctx) error {
 	var body model.User
 	if err := c.Bind().Body(&body); err != nil || !body.Valid() {
 		r.logger.Warn(err)
