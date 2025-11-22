@@ -47,5 +47,6 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 	if err = tx.Commit(ctx); err != nil {
 		return err
 	}
+
 	return nil
 }

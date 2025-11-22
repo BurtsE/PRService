@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS pull_requests (
     id VARCHAR(64) PRIMARY KEY,
+    name TEXT  NOT NULL,
     author_id VARCHAR(64) NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status TEXT NOT NULL CHECK (status IN ('OPEN','MERGED')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

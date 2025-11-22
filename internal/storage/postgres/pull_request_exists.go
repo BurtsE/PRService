@@ -11,5 +11,6 @@ func (r *Repository) PullRequestExists(ctx context.Context, id model.PullRequest
 	if err != nil {
 		return false, err
 	}
+
 	return exists, nil
 }

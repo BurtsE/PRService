@@ -11,14 +11,21 @@ const (
 )
 
 type PullRequest struct {
-	Id        PullRequestID
-	AuthorId  UserID
-	Reviewers []UserID
-	Status    PullRequestStatus
-	CreatedAt time.Time
-	MergedAt  time.Time
+	Id        PullRequestID     `json:"pull_request_id"`
+	Name      string            `json:"pull_request_name"`
+	AuthorId  UserID            `json:"author_id"`
+	Reviewers []UserID          `json:"assigned_reviewers"`
+	Status    PullRequestStatus `json:"status"`
+	CreatedAt time.Time         `json:"-"`
+	MergedAt  time.Time         `json:"-"`
 }
 
 func (p *PullRequest) Valid() bool {
-	return p.Id != "" && p.AuthorId != ""
+	return len(p.Id) != 0 && len(p.AuthorId) != 0 && len(p.Name) != 0
+}
+
+func (p *PullRequest) Init() {
+	p.CreatedAt = time.Now()
+	p.Status = PullRequestStatusOpen
+	p.Reviewers = make([]UserID, 0)
 }

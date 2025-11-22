@@ -34,6 +34,8 @@ func (r *Router) SetupRoutes() {
 
 	r.app.Post("/users/setIsActive", r.SetUserIsActive)
 
+	r.app.Post("/pullRequest/create", r.CreatePullRequest)
+
 	r.app.Get("/ping", func(c fiber.Ctx) error {
 		return c.JSON("pong")
 	})

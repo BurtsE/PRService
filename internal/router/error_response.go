@@ -27,22 +27,22 @@ func (r *Router) ProcessError(c fiber.Ctx, err error) error {
 	var response ErrorResponse
 	response.Message = err.Error()
 
-	if errors.As(err, &service.ErrTeamExists) {
+	if errors.Is(err, service.ErrTeamExists) {
 		response.Code = TeamExists
 		c.Status(fiber.StatusBadRequest)
-	} else if errors.As(err, &service.ErrPullRequestExists) {
+	} else if errors.Is(err, service.ErrPullRequestExists) {
 		response.Code = PullRequestExists
 		c.Status(fiber.StatusConflict)
-	} else if errors.As(err, &service.ErrPullRequestMerged) {
+	} else if errors.Is(err, service.ErrPullRequestMerged) {
 		response.Code = PullRequestMerged
 		c.Status(fiber.StatusBadRequest)
-	} else if errors.As(err, &service.ErrReviewerNotAssigned) {
+	} else if errors.Is(err, service.ErrReviewerNotAssigned) {
 		response.Code = ReviewerNotAssigned
 		c.Status(fiber.StatusConflict)
-	} else if errors.As(err, &service.ErrReviewersUnavailable) {
+	} else if errors.Is(err, service.ErrReviewersUnavailable) {
 		response.Code = ReviewersUnavailable
 		c.Status(fiber.StatusBadRequest)
-	} else if errors.As(err, &service.ErrResourceNotFound) {
+	} else if errors.Is(err, service.ErrResourceNotFound) {
 		response.Code = ResourceNotFound
 		c.Status(fiber.StatusNotFound)
 	} else {
