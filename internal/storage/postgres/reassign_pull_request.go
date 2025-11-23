@@ -10,7 +10,7 @@ func (r *Repository) ReassignPullRequestReviewer(ctx context.Context,
 
 	query := `
 		UPDATE pull_request_reviewers
-		SET user_id = $1
+		SET user_id = $3
 		WHERE pull_request_id = $1
 			AND user_id = $2
 	`

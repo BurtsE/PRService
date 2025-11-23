@@ -1,4 +1,4 @@
-package prservice
+package mocks
 
 import (
 	"PRService/internal/model"
@@ -64,11 +64,6 @@ func (m *MockStorage) TeamExists(ctx context.Context, teamName model.TeamName) (
 func (m *MockStorage) SetUserIsActive(ctx context.Context, user *model.User) error {
 	args := m.Called(ctx, user)
 	return args.Error(0)
-}
-
-func (m *MockStorage) UserExists(ctx context.Context, id model.UserID) (bool, error) {
-	args := m.Called(ctx, id)
-	return args.Bool(0), args.Error(1)
 }
 
 func (m *MockStorage) GetUser(ctx context.Context, id model.UserID) (model.User, error) {

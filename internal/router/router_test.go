@@ -1,6 +1,7 @@
 package router
 
 import (
+	"PRService/internal/mocks"
 	"PRService/internal/model"
 	"PRService/internal/service"
 	"bytes"
@@ -14,10 +15,10 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func setupTest(t *testing.T) (*Router, *MockService) {
+func setupTest(t *testing.T) (*Router, *mocks.MockService) {
 	logger := logrus.New()
 	logger.SetLevel(logrus.PanicLevel)
-	mockService := new(MockService)
+	mockService := new(mocks.MockService)
 	router := NewRouter(nil, logger, mockService)
 	router.SetupRoutes()
 	return router, mockService

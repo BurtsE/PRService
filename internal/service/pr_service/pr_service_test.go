@@ -1,6 +1,7 @@
 package prservice
 
 import (
+	"PRService/internal/mocks"
 	"PRService/internal/model"
 	"PRService/internal/service"
 	"context"
@@ -325,7 +326,7 @@ func TestGetReviewersPRs(t *testing.T) {
 	})
 }
 
-func newTestService(logger *logrus.Logger) (*MockStorage, *Service) {
-	mockStorage := new(MockStorage)
+func newTestService(logger *logrus.Logger) (*mocks.MockStorage, *Service) {
+	mockStorage := new(mocks.MockStorage)
 	return mockStorage, NewService(logger, mockStorage)
 }

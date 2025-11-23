@@ -3,8 +3,9 @@ package router
 import (
 	"PRService/internal/model"
 	"PRService/internal/service"
-	"github.com/gofiber/fiber/v3"
 	"net/http"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 /*
@@ -21,13 +22,10 @@ func (r *Router) createTeam(c fiber.Ctx) error {
 		return r.ProcessError(c, service.ErrResourceNotFound)
 	}
 
-	r.logger.Debugf("AddTeam %+v", team)
 	err := r.service.CreateTeam(c.Context(), &team)
 	if err != nil {
 		return r.ProcessError(c, err)
 	}
 
-	return c.Status(http.StatusCreated).JSON(map[string]any{
-		"team": team,
-	})
+	return c.Status(http.StatusCreated).JSON(map[string]any{"team": &team})
 }
