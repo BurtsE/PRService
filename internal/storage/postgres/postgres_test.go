@@ -57,7 +57,7 @@ func TestMain(m *testing.M) {
 	testRepo = &Repository{c: testDBConn}
 
 	// 4. Apply schema
-	schemaPath := filepath.Join(".", "schema.sql")
+	schemaPath := filepath.Join("../../mocks", "schema.sql")
 	schema, err := os.ReadFile(schemaPath)
 	if err != nil {
 		fmt.Printf("failed to read schema file: %s", err)
@@ -370,4 +370,3 @@ func TestGetStatistic(t *testing.T) {
 	assert.Equal(t, 1, stats.MergedPRs)
 	assert.InDelta(t, 86400, stats.AvgMergeTimeSeconds, 1.0, "average merge time should be around 1 day (86400s)")
 }
-

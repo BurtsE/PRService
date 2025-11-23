@@ -1,6 +1,6 @@
 module PRService
 
-go 1.25.4
+go 1.25.0
 
 require (
 	github.com/gofiber/fiber/v3 v3.0.0-rc.3
