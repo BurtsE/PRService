@@ -1,8 +1,9 @@
-package pr_service
+package prservice
 
 import (
 	"PRService/internal/service"
 	"PRService/internal/storage"
+
 	"github.com/sirupsen/logrus"
 )
 

@@ -42,12 +42,12 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 	}
 	defer rows.Close()
 
-	var userId model.UserID
+	var userID model.UserID
 	for rows.Next() {
-		if err := rows.Scan(&userId); err != nil {
+		if err := rows.Scan(&userID); err != nil {
 			return err
 		}
-		request.Reviewers = append(request.Reviewers, userId)
+		request.Reviewers = append(request.Reviewers, userID)
 	}
 	if len(request.Reviewers) == 0 {
 		return service.ErrReviewerNotAssigned

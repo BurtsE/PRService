@@ -26,7 +26,7 @@ func (t *Team) Valid() bool {
 func (t *Team) MarshalJSON() ([]byte, error) {
 	// Define a temporary user type without TeamName
 	type userDto struct {
-		Id       UserID `json:"user_id"`
+		ID       UserID `json:"user_id"`
 		Name     string `json:"username"`
 		IsActive bool   `json:"is_active"`
 	}
@@ -35,7 +35,7 @@ func (t *Team) MarshalJSON() ([]byte, error) {
 	members := make([]userDto, len(t.Members))
 	for i, u := range t.Members {
 		members[i] = userDto{
-			Id:       u.ID,
+			ID:       u.ID,
 			Name:     u.Name,
 			IsActive: u.IsActive,
 		}

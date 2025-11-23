@@ -5,6 +5,7 @@ import (
 	"PRService/internal/storage"
 	"context"
 	"fmt"
+
 	"github.com/jackc/pgx/v5"
 )
 
@@ -16,10 +17,10 @@ type Repository struct {
 
 func NewRepository(cfg *config.Config) (*Repository, error) {
 	DSN := fmt.Sprintf("host=%s dbname=%s user=%s password=%s sslmode=disable",
-		cfg.Postgres.Host,
-		cfg.Postgres.Database,
-		cfg.Postgres.User,
-		cfg.Postgres.Password,
+		cfg.Host,
+		cfg.Database,
+		cfg.User,
+		cfg.Password,
 	)
 	c, err := pgx.Connect(context.Background(), DSN)
 	if err != nil {

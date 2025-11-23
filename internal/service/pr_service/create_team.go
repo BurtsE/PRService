@@ -1,8 +1,9 @@
-package pr_service
+package prservice
 
 import (
 	"PRService/internal/model"
 	"PRService/internal/service"
+
 	"context"
 )
 

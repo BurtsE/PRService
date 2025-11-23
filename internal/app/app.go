@@ -3,16 +3,17 @@ package app
 import (
 	"PRService/internal/config"
 	"PRService/internal/router"
-	"PRService/internal/service/pr_service"
+	prService "PRService/internal/service/pr_service"
 	"PRService/internal/storage/postgres"
 	"context"
 	"fmt"
+
 	"github.com/sirupsen/logrus"
 )
 
 type App struct {
 	postgres *postgres.Repository
-	service  *pr_service.Service
+	service  *prService.Service
 	logger   *logrus.Logger
 	config   *config.Config
 	router   *router.Router
@@ -47,9 +48,9 @@ func (a *App) Postgres() *postgres.Repository {
 	return a.postgres
 }
 
-func (a *App) Service() *pr_service.Service {
+func (a *App) Service() *prService.Service {
 	if a.service == nil {
-		a.service = pr_service.NewService(a.Logger(), a.Postgres())
+		a.service = prService.NewService(a.Logger(), a.Postgres())
 	}
 	return a.service
 }

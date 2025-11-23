@@ -4,6 +4,7 @@ import (
 	"PRService/internal/config"
 	"PRService/internal/service"
 	"context"
+
 	"github.com/gofiber/fiber/v3"
 	fiberlogger "github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/sirupsen/logrus"
@@ -15,7 +16,7 @@ type Router struct {
 	logger  *logrus.Logger
 }
 
-func NewRouter(cfg *config.Config, logger *logrus.Logger, service service.Service) *Router {
+func NewRouter(_ *config.Config, logger *logrus.Logger, service service.Service) *Router {
 	app := fiber.New(fiber.Config{})
 	app.Server().Logger = logger
 	app.Use(fiberlogger.New(fiberlogger.Config{

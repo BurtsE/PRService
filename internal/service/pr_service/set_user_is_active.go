@@ -1,4 +1,4 @@
-package pr_service
+package prservice
 
 import (
 	"PRService/internal/model"
@@ -29,7 +29,7 @@ func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
 }
 
 func (s *Service) reassignInactiveUsersPrs(ctx context.Context, user *model.User) {
-	if user.IsActive == false {
+	if !user.IsActive {
 		prs, err := s.GetReviewersPRs(ctx, user.ID)
 		if err != nil {
 			s.logger.Warnf("Error getting reviewers PRs: %v", err)
@@ -40,7 +40,7 @@ func (s *Service) reassignInactiveUsersPrs(ctx context.Context, user *model.User
 			if pr.Status == model.PullRequestStatusMerged {
 				continue
 			}
-			
+
 			_, err = s.ReassignPullRequestReviewer(ctx, pr.ID, user.ID)
 			if err != nil {
 				s.logger.Warnf("Error reassigning PR: %v", err)
