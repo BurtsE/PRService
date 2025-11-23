@@ -16,12 +16,9 @@ func (s *Service) CreatePullRequest(ctx context.Context, request *model.PullRequ
 		return service.ErrPullRequestExists
 	}
 
-	exists, err := s.storage.UserExists(ctx, request.AuthorID)
+	_, err = s.storage.GetUser(ctx, request.AuthorID)
 	if err != nil {
 		return err
-	}
-	if !exists {
-		return service.ErrResourceNotFound
 	}
 
 	request.Init()

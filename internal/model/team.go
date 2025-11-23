@@ -3,6 +3,7 @@ package model
 import "encoding/json"
 
 type TeamName string
+
 type Team struct {
 	Name    TeamName `json:"team_name"`
 	Members []User   `json:"members"`
@@ -22,16 +23,13 @@ func (t *Team) Valid() bool {
 	return true
 }
 
-// MarshalJSON  for correct response
 func (t *Team) MarshalJSON() ([]byte, error) {
-	// Define a temporary user type without TeamName
 	type userDto struct {
 		ID       UserID `json:"user_id"`
 		Name     string `json:"username"`
 		IsActive bool   `json:"is_active"`
 	}
 
-	// Convert Members to the trimmed version
 	members := make([]userDto, len(t.Members))
 	for i, u := range t.Members {
 		members[i] = userDto{
@@ -41,7 +39,6 @@ func (t *Team) MarshalJSON() ([]byte, error) {
 		}
 	}
 
-	// Define an anonymous struct matching desired JSON
 	tmp := struct {
 		Name    TeamName  `json:"team_name"`
 		Members []userDto `json:"members"`

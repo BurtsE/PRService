@@ -2,19 +2,14 @@ package prservice
 
 import (
 	"PRService/internal/model"
-	"PRService/internal/service"
 	"context"
 )
 
 // SetUserIsActive changes user's is_active flag, then tries to reassign reviewed pull requests
 func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
-	exists, err := s.storage.UserExists(ctx, user.ID)
+	_, err := s.storage.GetUser(ctx, user.ID)
 	if err != nil {
-		s.logger.Errorf("Error checking if user exists: %v", err)
 		return err
-	}
-	if !exists {
-		return service.ErrResourceNotFound
 	}
 
 	err = s.storage.SetUserIsActive(ctx, user)
