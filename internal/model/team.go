@@ -35,7 +35,7 @@ func (t *Team) MarshalJSON() ([]byte, error) {
 	members := make([]userDto, len(t.Members))
 	for i, u := range t.Members {
 		members[i] = userDto{
-			Id:       u.Id,
+			Id:       u.ID,
 			Name:     u.Name,
 			IsActive: u.IsActive,
 		}

@@ -34,7 +34,7 @@ func (r *Repository) CreateTeam(ctx context.Context, team *model.Team) error {
 
 	for i := range team.Members {
 		err = tx.QueryRow(ctx, userInsertQuery,
-			team.Members[i].Id,
+			team.Members[i].ID,
 			team.Members[i].Name,
 			team.Name,
 			team.Members[i].IsActive,

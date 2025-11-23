@@ -20,7 +20,7 @@ func (r *Repository) GetTeam(ctx context.Context, teamName model.TeamName) (*mod
 	members := make([]model.User, 0)
 	for rows.Next() {
 		var u model.User
-		if err := rows.Scan(&u.Id, &u.Name, &u.TeamName, &u.IsActive); err != nil {
+		if err := rows.Scan(&u.ID, &u.Name, &u.TeamName, &u.IsActive); err != nil {
 			return nil, err
 		}
 		members = append(members, u)
