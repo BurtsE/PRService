@@ -8,14 +8,14 @@ import (
 	"errors"
 )
 
-func (r *Repository) GetPullRequest(ctx context.Context, id model.PullRequestID) (model.PullRequest, error) {
+func (r *Repository) GetPullRequest(ctx context.Context, pullRequestID model.PullRequestID) (model.PullRequest, error) {
 	query := `
 		SELECT id, name, author_id, status, created_at, merged_at
 		FROM pull_requests
 		WHERE id = $1
 	`
 	var pullRequest model.PullRequest
-	err := r.c.QueryRow(ctx, query, id).Scan(
+	err := r.c.QueryRow(ctx, query, pullRequestID).Scan(
 		&pullRequest.ID,
 		&pullRequest.Name,
 		&pullRequest.AuthorID,
@@ -36,7 +36,7 @@ func (r *Repository) GetPullRequest(ctx context.Context, id model.PullRequestID)
 		WHERE pull_request_id = $1
 	`
 
-	rows, err := r.c.Query(ctx, query, id)
+	rows, err := r.c.Query(ctx, query, pullRequestID)
 	if err != nil {
 		return model.PullRequest{}, err
 	}

@@ -4,7 +4,6 @@ import (
 	"PRService/internal/model"
 	"PRService/internal/service"
 	"context"
-	"time"
 )
 
 func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
@@ -17,15 +16,14 @@ func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
 		return service.ErrResourceNotFound
 	}
 
-	newCtx, _ := context.WithTimeout(ctx, time.Millisecond*100)
-	go s.reassignInactiveUsersPrs(newCtx, user)
-
 	err = s.storage.SetUserIsActive(ctx, user)
 	if err != nil {
 		s.logger.Errorf("Error setting user isActive: %v", err)
 		return err
 	}
 
+	s.reassignInactiveUsersPrs(ctx, user)
+	
 	return nil
 }
 
