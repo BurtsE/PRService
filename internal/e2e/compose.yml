@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${POSTGRES_HOST}
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+
+    volumes:
+      - ../internal/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+        interval: 5s
+        timeout: 10s
+        retries: 5
+        start_period: 10s
+    networks:
+      - internal
+  service:
+    build:
+      context: ../../
+      dockerfile: ./build/Dockerfile
+    container_name: test_service
+    env_file:
+      - .env
+    environment:
+        ENV: "development"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+networks:
+  internal:

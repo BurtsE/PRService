@@ -3,18 +3,19 @@
 services:
   postgres:
     image: postgres:15
-    environment:
-      POSTGRES_USER: dbuser
-      POSTGRES_PASSWORD: dbpass
-      POSTGRES_DB: dbname
+    container_name: ${POSTGRES_HOST}
+    env_file:
+      - .env
     volumes:
       - ./internal/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U dbuser -d dbname" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
       timeout: 10s
       retries: 5
       start_period: 10s
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
     networks:
       - internal
   service:
@@ -22,6 +23,8 @@ services:
       context: ./
       dockerfile: ./build/Dockerfile
     container_name: service
+    env_file:
+      - .env
     environment:
         ENV: "development"
     depends_on:

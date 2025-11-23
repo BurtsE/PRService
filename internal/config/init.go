@@ -17,5 +17,11 @@ func InitConfig() (*Config, error) {
 		return nil, err
 	}
 
+	cfg.Host = GetDatabaseHost()
+	cfg.Database = GetDatabaseName()
+	cfg.User = GetDatabaseUser()
+	cfg.Password = GetDatabasePassword()
+	cfg.Postgres.Port = GetDatabasePort()
+
 	return cfg, nil
 }
