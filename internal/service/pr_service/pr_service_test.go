@@ -154,7 +154,7 @@ func TestMergePullRequest(t *testing.T) {
 		mockStorage.On("GetPullRequest", ctx, prID).Return(pr, nil).Once()
 		mockStorage.On("MergePullRequest", ctx, prID).Return(mergedPR, nil).Once()
 
-		result, err := s.MergePullRequest(ctx, prID)
+		result, err := s.MergePullRequest(ctx, prID) // result is *model.PullRequest
 
 		assert.NoError(t, err)
 		assert.Equal(t, mergedPR, result)
@@ -163,7 +163,7 @@ func TestMergePullRequest(t *testing.T) {
 
 	t.Run("pr not found", func(t *testing.T) {
 		mockStorage, s := newTestService(logger)
-		mockStorage.On("GetPullRequest", ctx, prID).Return(model.PullRequest{}, service.ErrResourceNotFound).Once()
+		mockStorage.On("GetPullRequest", ctx, prID).Return(model.PullRequest{}, service.ErrResourceNotFound).Once() // GetPullRequest returns value
 
 		result, err := s.MergePullRequest(ctx, prID)
 
@@ -322,6 +322,29 @@ func TestGetReviewersPRs(t *testing.T) {
 
 		assert.Equal(t, service.ErrResourceNotFound, err)
 		assert.Nil(t, prs)
+		mockStorage.AssertExpectations(t)
+	})
+}
+
+func TestGetStatistic(t *testing.T) {
+	ctx := context.Background()
+	logger := logrus.New()
+	logger.SetLevel(logrus.PanicLevel)
+
+	expectedStats := model.Statistic{
+		TotalPRs:  10,
+		OpenPRs:   5,
+		MergedPRs: 5,
+	}
+
+	t.Run("success", func(t *testing.T) {
+		mockStorage, s := newTestService(logger)
+		mockStorage.On("GetStatistic", ctx).Return(expectedStats, nil).Once()
+
+		stats, err := s.GetStatistic(ctx)
+
+		assert.NoError(t, err)
+		assert.Equal(t, expectedStats, stats)
 		mockStorage.AssertExpectations(t)
 	})
 }

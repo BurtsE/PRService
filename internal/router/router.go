@@ -40,6 +40,8 @@ func (r *Router) SetupRoutes() {
 	r.app.Post("/pullRequest/merge", r.mergePullRequest)
 	r.app.Post("/pullRequest/reassign", r.reassignPullRequestReviewer)
 
+	r.app.Get("/statistic", r.GetStatistic)
+
 	r.app.Get("/ping", func(c fiber.Ctx) error {
 		return c.JSON("pong")
 	})
@@ -53,3 +55,4 @@ func (r *Router) Start(_ context.Context, addr string) error {
 func (r *Router) Stop(_ context.Context) error {
 	return r.app.Server().Shutdown()
 }
+

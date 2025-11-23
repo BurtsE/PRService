@@ -55,3 +55,20 @@ func (m *MockService) SetUserIsActive(ctx context.Context, user *model.User) err
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }
+
+func (m *MockService) GetStatistic(ctx context.Context) (model.Statistic, error) {
+	args := m.Called(ctx)
+	return args.Get(0).(model.Statistic), args.Error(1)
+}
+
+// The following methods are part of the service.Service interface but were missing from the mock.
+
+func (m *MockService) TeamExists(ctx context.Context, teamName model.TeamName) (bool, error) {
+	args := m.Called(ctx, teamName)
+	return args.Bool(0), args.Error(1)
+}
+
+func (m *MockService) GetUser(ctx context.Context, id model.UserID) (model.User, error) {
+	args := m.Called(ctx, id)
+	return args.Get(0).(model.User), args.Error(1)
+}

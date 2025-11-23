@@ -164,9 +164,9 @@ func TestCreatePullRequest(t *testing.T) {
 	team := &model.Team{
 		Name: "team-awesome",
 		Members: []model.User{
-			{ID: "author-1", Name: "Author"},
-			{ID: "reviewer-1", Name: "Reviewer One"},
-			{ID: "reviewer-2", Name: "Reviewer Two"},
+			{ID: "author-1", Name: "Author", IsActive: true, TeamName: "team-awesome"},
+			{ID: "reviewer-1", Name: "Reviewer One", IsActive: true, TeamName: "team-awesome"},
+			{ID: "reviewer-2", Name: "Reviewer Two", IsActive: true, TeamName: "team-awesome"},
 		},
 	}
 	err := testRepo.CreateTeam(ctx, team)
@@ -225,7 +225,11 @@ func TestMergePullRequest(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup
-	team := &model.Team{Name: "team-a", Members: []model.User{{ID: "author-1", Name: "Author"}}}
+	team := &model.Team{Name: "team-a", Members: []model.User{
+		{ID: "author-1", Name: "Author", IsActive: true, TeamName: "team-a"},
+		{ID: "reviewer-1", Name: "Reviewer One", IsActive: true, TeamName: "team-a"},
+		{ID: "reviewer-2", Name: "Reviewer Two", IsActive: true, TeamName: "team-a"},
+	}}
 	err := testRepo.CreateTeam(ctx, team)
 	require.NoError(t, err)
 	pr := &model.PullRequest{ID: "pr-to-merge", Name: "Ready to merge", AuthorID: "author-1"}
@@ -257,9 +261,9 @@ func TestGetReviewersPRs(t *testing.T) {
 	team := &model.Team{
 		Name: "team-review",
 		Members: []model.User{
-			{ID: "author-1", Name: "Author One"},
-			{ID: "author-2", Name: "Author Two"},
-			{ID: "reviewer-1", Name: "The Reviewer"},
+			{ID: "author-1", Name: "Author One", IsActive: true, TeamName: "team-review"},
+			{ID: "author-2", Name: "Author Two", IsActive: true, TeamName: "team-review"},
+			{ID: "reviewer-1", Name: "The Reviewer", IsActive: true, TeamName: "team-review"},
 		},
 	}
 	err := testRepo.CreateTeam(ctx, team)
@@ -338,24 +342,32 @@ func TestReassignPullRequestReviewer(t *testing.T) {
 	assert.Contains(t, finalPR.Reviewers, model.UserID("new-reviewer"))
 }
 
-func TestReassignPullRequestReviewer_NoCandidates(t *testing.T) {
+func TestGetStatistic(t *testing.T) {
 	cleanup(t)
 	ctx := context.Background()
 
-	// Setup: 1 team, 2 users
-	team := &model.Team{
-		Name: "team-reassign",
-		Members: []model.User{
-			{ID: "author-1", Name: "Author"},
-			{ID: "old-reviewer", Name: "Old Reviewer"},
-		},
-	}
-	err := testRepo.CreateTeam(ctx, team)
+	// Setup data
+	_, err := testDBConn.Exec(ctx, `
+		INSERT INTO teams (name) VALUES ('team-1'), ('team-2');
+		INSERT INTO users (id, name, team_name, is_active) VALUES 
+			('u1', 'a', 'team-1', true), 
+			('u2', 'b', 'team-1', true), 
+			('u3', 'c', 'team-1', false);
+		INSERT INTO pull_requests (id, name, author_id, status, created_at, merged_at) VALUES
+			('pr1', 'p1', 'u1', 'OPEN', NOW() - interval '2 day', null),
+			('pr2', 'p2', 'u2', 'MERGED', NOW() - interval '1 day', NOW());
+	`)
 	require.NoError(t, err)
 
-	// This test case is no longer relevant for the storage layer, as the logic
-	// for finding an available reviewer (and handling the case where none are available)
-	// has been moved to the service layer. The storage layer's responsibility
-	// is simply to execute the UPDATE query.
-	t.Skip("Skipping test as reviewer availability logic is now in the service layer")
+	stats, err := testRepo.GetStatistic(ctx)
+	require.NoError(t, err)
+
+	assert.Equal(t, 2, stats.TotalTeams)
+	assert.Equal(t, 3, stats.TotalUsers)
+	assert.Equal(t, 2, stats.ActiveUsers)
+	assert.Equal(t, 2, stats.TotalPRs)
+	assert.Equal(t, 1, stats.OpenPRs)
+	assert.Equal(t, 1, stats.MergedPRs)
+	assert.InDelta(t, 86400, stats.AvgMergeTimeSeconds, 1.0, "average merge time should be around 1 day (86400s)")
 }
+

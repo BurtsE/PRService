@@ -70,3 +70,8 @@ func (m *MockStorage) GetUser(ctx context.Context, id model.UserID) (model.User,
 	args := m.Called(ctx, id)
 	return args.Get(0).(model.User), args.Error(1)
 }
+
+func (m *MockStorage) GetStatistic(ctx context.Context) (model.Statistic, error) {
+	args := m.Called(ctx)
+	return args.Get(0).(model.Statistic), args.Error(1)
+}

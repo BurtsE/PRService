@@ -18,4 +18,6 @@ type Storage interface {
 	CreatePullRequest(context.Context, *model.PullRequest) error
 	MergePullRequest(context.Context, model.PullRequestID) (*model.PullRequest, error)
 	ReassignPullRequestReviewer(context.Context, *model.PullRequest, model.UserID, model.UserID) error
+
+	GetStatistic(context.Context) (model.Statistic, error)
 }

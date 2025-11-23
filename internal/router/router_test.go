@@ -6,6 +6,7 @@ import (
 	"PRService/internal/service"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"testing"
@@ -16,6 +17,7 @@ import (
 )
 
 func setupTest(t *testing.T) (*Router, *mocks.MockService) {
+	t.Helper()
 	logger := logrus.New()
 	logger.SetLevel(logrus.PanicLevel)
 	mockService := new(mocks.MockService)
@@ -326,6 +328,49 @@ func TestGetReview(t *testing.T) {
 		resp, err := router.app.Test(req)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusNotFound, resp.StatusCode)
+	})
+}
+
+func TestGetStatistic(t *testing.T) {
+	router, mockService := setupTest(t)
+
+	stats := model.Statistic{
+		TotalPRs:            10,
+		OpenPRs:             5,
+		MergedPRs:           5,
+		TotalUsers:          20,
+		ActiveUsers:         18,
+		TotalTeams:          3,
+		AvgMergeTimeSeconds: 3600.5,
+	}
+
+	t.Run("success", func(t *testing.T) {
+		mockService.On("GetStatistic", mock.Anything).Return(stats, nil).Once()
+
+		req, _ := http.NewRequest("GET", "/statistic", nil)
+
+		resp, err := router.app.Test(req)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+		var resultStats model.Statistic
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		json.Unmarshal(bodyBytes, &resultStats)
+		assert.Equal(t, stats, resultStats)
+
+		mockService.AssertExpectations(t)
+	})
+
+	t.Run("service error", func(t *testing.T) {
+		mockService.On("GetStatistic", mock.Anything).Return(model.Statistic{}, errors.New("db error")).Once()
+
+		req, _ := http.NewRequest("GET", "/statistic", nil)
+
+		resp, err := router.app.Test(req)
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusInternalServerError, resp.StatusCode)
+
+		mockService.AssertExpectations(t)
 	})
 }
 

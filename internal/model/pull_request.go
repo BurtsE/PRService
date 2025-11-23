@@ -17,7 +17,7 @@ type PullRequest struct {
 	Reviewers []UserID          `json:"assigned_reviewers"`
 	Status    PullRequestStatus `json:"status"`
 	CreatedAt time.Time         `json:"-"`
-	MergedAt  time.Time         `json:"-"`
+	MergedAt  *time.Time        `json:"-"`
 }
 
 func (p *PullRequest) Valid() bool {
