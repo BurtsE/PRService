@@ -11,6 +11,7 @@ func (r *Router) getTeam(c fiber.Ctx) error {
 	if name == "" {
 		return r.ProcessError(c, service.ErrResourceNotFound)
 	}
+
 	team, err := r.service.GetTeam(c.Context(), model.TeamName(name))
 	if err != nil {
 		return c.
