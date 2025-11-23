@@ -24,6 +24,7 @@ func (s *Service) ReassignPullRequestReviewer(ctx context.Context,
 	// Check if user exists
 	user, err := s.storage.GetUser(ctx, userID)
 	if err != nil {
+		s.logger.Errorf("ReassignPullRequestReviewer: could not get user: %v", err)
 		return model.PullRequest{}, err
 	}
 
@@ -42,6 +43,7 @@ func (s *Service) ReassignPullRequestReviewer(ctx context.Context,
 	// Get user's team
 	team, err := s.storage.GetTeam(ctx, user.TeamName)
 	if err != nil {
+		s.logger.Errorf("ReassignPullRequestReviewer: could not get team: %v", err)
 		return model.PullRequest{}, err
 	}
 
@@ -52,9 +54,10 @@ func (s *Service) ReassignPullRequestReviewer(ctx context.Context,
 
 	err = s.storage.ReassignPullRequestReviewer(ctx, &request, userID, newReviewer.ID)
 	if err != nil {
+		s.logger.Errorf("ReassignPullRequestReviewer: could not reassign reviewer: %v", err)
 		return model.PullRequest{}, err
 	}
-	
+
 	// Update the reviewers slice on the returned object
 	for i, r := range request.Reviewers {
 		if r == userID {

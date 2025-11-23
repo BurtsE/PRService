@@ -256,7 +256,7 @@ func TestSetUserIsActive(t *testing.T) {
 		mockStorage.On("SetUserIsActive", ctx, user).Return(nil)
 		// For reassignInactiveUsersPrs
 		mockStorage.On("GetReviewersPRs", ctx, user.ID).Return([]model.PullRequest{pr}, nil)
-		// Mocks for the inner ReassignPullRequestReviewer call - simplified as it's complex to mock precisely here
+		// Mocks for the inner ReassignPullRequestReviewer call
 		mockStorage.On("GetPullRequest", ctx, pr.ID).Return(pr, nil)
 		mockStorage.On("GetUser", ctx, user.ID).Return(model.User{ID: user.ID, TeamName: "team-a"}, nil)
 		mockStorage.On("GetTeam", ctx, model.TeamName("team-a")).Return(team, nil)

@@ -10,7 +10,7 @@ import (
 func (s *Service) CreateTeam(ctx context.Context, team *model.Team) error {
 	exist, err := s.storage.TeamExists(ctx, team.Name)
 	if err != nil {
-		s.logger.Warn(err)
+		s.logger.Errorf("CreateTeam: could not check if team exists: %v", err)
 		return err
 	}
 	if exist {
@@ -18,7 +18,7 @@ func (s *Service) CreateTeam(ctx context.Context, team *model.Team) error {
 	}
 	err = s.storage.CreateTeam(ctx, team)
 	if err != nil {
-		s.logger.Warn(err)
+		s.logger.Errorf("CreateTeam: could not create team: %v", err)
 		return err
 	}
 
