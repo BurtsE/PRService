@@ -6,6 +6,7 @@ import (
 	"context"
 )
 
+// SetUserIsActive changes user's is_active flag, then tries to reassign reviewed pull requests
 func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
 	exists, err := s.storage.UserExists(ctx, user.ID)
 	if err != nil {
@@ -23,7 +24,7 @@ func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
 	}
 
 	s.reassignInactiveUsersPrs(ctx, user)
-	
+
 	return nil
 }
 
@@ -36,6 +37,10 @@ func (s *Service) reassignInactiveUsersPrs(ctx context.Context, user *model.User
 		}
 
 		for _, pr := range prs {
+			if pr.Status == model.PullRequestStatusMerged {
+				continue
+			}
+			
 			_, err = s.ReassignPullRequestReviewer(ctx, pr.ID, user.ID)
 			if err != nil {
 				s.logger.Warnf("Error reassigning PR: %v", err)

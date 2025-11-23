@@ -18,6 +18,8 @@ const (
 	InternalServerError  ErrorCode = "INTERNAL_SERVER_ERROR"
 )
 
+const internalServerErrorMessage = "internal Server Error"
+
 type ErrorResponse struct {
 	Code    ErrorCode `json:"code"`
 	Message string    `json:"message"`
@@ -47,6 +49,7 @@ func (r *Router) ProcessError(c fiber.Ctx, err error) error {
 		c.Status(fiber.StatusNotFound)
 	} else {
 		response.Code = InternalServerError
+		response.Message = internalServerErrorMessage
 		c.Status(fiber.StatusInternalServerError)
 	}
 
