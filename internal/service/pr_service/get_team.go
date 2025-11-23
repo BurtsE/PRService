@@ -17,7 +17,7 @@ func (s *Service) GetTeam(ctx context.Context, teamName model.TeamName) (*model.
 	}
 	team, err := s.storage.GetTeam(ctx, teamName)
 	if err != nil {
-		s.logger.Errorf("GetTeam: could not get team: %v")
+		s.logger.Errorf("GetTeam: could not get team: %v", err)
 		return nil, err
 	}
 
