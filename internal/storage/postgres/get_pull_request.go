@@ -51,5 +51,9 @@ func (r *Repository) GetPullRequest(ctx context.Context, pullRequestID model.Pul
 		pullRequest.Reviewers = append(pullRequest.Reviewers, userID)
 	}
 
+	if err = rows.Err(); err != nil {
+		return model.PullRequest{}, err
+	}
+
 	return pullRequest, nil
 }

@@ -52,6 +52,11 @@ func (r *Repository) MergePullRequest(ctx context.Context, requestID model.PullR
 		pr.Reviewers = append(pr.Reviewers, userID)
 	}
 
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close()
+
 	if err = tx.Commit(ctx); err != nil {
 		return nil, err
 	}

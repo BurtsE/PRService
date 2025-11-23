@@ -49,6 +49,9 @@ func (r *Repository) CreatePullRequest(ctx context.Context, request *model.PullR
 		}
 		request.Reviewers = append(request.Reviewers, userID)
 	}
+	if err = rows.Err(); err != nil {
+		return err
+	}
 	if len(request.Reviewers) == 0 {
 		return service.ErrReviewerNotAssigned
 	}

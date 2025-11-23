@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
@@ -19,7 +19,7 @@ import (
 )
 
 var testRepo *Repository
-var testDBConn *pgx.Conn
+var testDBPool *pgxpool.Pool
 
 func TestMain(m *testing.M) {
 	ctx := context.Background()
@@ -49,12 +49,12 @@ func TestMain(m *testing.M) {
 	}
 
 	// 3. Connect to the database
-	testDBConn, err = pgx.Connect(ctx, connStr)
+	testDBPool, err = pgxpool.New(ctx, connStr)
 	if err != nil {
 		fmt.Printf("failed to connect to database: %s", err)
 		os.Exit(1)
 	}
-	testRepo = &Repository{c: testDBConn}
+	testRepo = &Repository{c: testDBPool}
 
 	// 4. Apply schema
 	schemaPath := filepath.Join("../../mocks", "schema.sql")
@@ -63,7 +63,7 @@ func TestMain(m *testing.M) {
 		fmt.Printf("failed to read schema file: %s", err)
 		os.Exit(1)
 	}
-	_, err = testDBConn.Exec(ctx, string(schema))
+	_, err = testDBPool.Exec(ctx, string(schema))
 	if err != nil {
 		fmt.Printf("failed to apply schema: %s", err)
 		os.Exit(1)
@@ -82,7 +82,7 @@ func TestMain(m *testing.M) {
 
 func cleanup(t *testing.T) {
 	ctx := context.Background()
-	_, err := testDBConn.Exec(ctx, "TRUNCATE teams, users, pull_requests, pull_request_reviewers RESTART IDENTITY CASCADE")
+	_, err := testDBPool.Exec(ctx, "TRUNCATE teams, users, pull_requests, pull_request_reviewers RESTART IDENTITY CASCADE")
 	require.NoError(t, err)
 }
 
@@ -281,9 +281,9 @@ func TestGetReviewersPRs(t *testing.T) {
 	require.NoError(t, err)
 
 	// Manually ensure reviewer-1 is on both PRs for deterministic test
-	_, err = testDBConn.Exec(ctx, "DELETE FROM pull_request_reviewers")
+	_, err = testDBPool.Exec(ctx, "DELETE FROM pull_request_reviewers")
 	require.NoError(t, err)
-	_, err = testDBConn.Exec(ctx, "INSERT INTO pull_request_reviewers (pull_request_id, user_id) VALUES ('pr-1', 'reviewer-1'), ('pr-2', 'reviewer-1')")
+	_, err = testDBPool.Exec(ctx, "INSERT INTO pull_request_reviewers (pull_request_id, user_id) VALUES ('pr-1', 'reviewer-1'), ('pr-2', 'reviewer-1')")
 	require.NoError(t, err)
 
 	// Test
@@ -313,11 +313,11 @@ func TestReassignPullRequestReviewer(t *testing.T) {
 	require.NoError(t, err)
 
 	// Manually create PR and reviewers for a deterministic test
-	_, err = testDBConn.Exec(ctx, `INSERT INTO pull_requests (id, name, author_id, status, created_at) 
+	_, err = testDBPool.Exec(ctx, `INSERT INTO pull_requests (id, name, author_id, status, created_at) 
 										VALUES ('pr-reassign', 'Reassign Test', 'author-1', 'OPEN', NOW())`)
 	require.NoError(t, err)
 
-	_, err = testDBConn.Exec(ctx, "INSERT INTO pull_request_reviewers (pull_request_id, user_id) VALUES ('pr-reassign', 'old-reviewer'), ('pr-reassign', 'other-reviewer')")
+	_, err = testDBPool.Exec(ctx, "INSERT INTO pull_request_reviewers (pull_request_id, user_id) VALUES ('pr-reassign', 'old-reviewer'), ('pr-reassign', 'other-reviewer')")
 	require.NoError(t, err)
 
 	// Fetch the PR to pass to the method
@@ -347,7 +347,7 @@ func TestGetStatistic(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup data
-	_, err := testDBConn.Exec(ctx, `
+	_, err := testDBPool.Exec(ctx, `
 		INSERT INTO teams (name) VALUES ('team-1'), ('team-2');
 		INSERT INTO users (id, name, team_name, is_active) VALUES 
 			('u1', 'a', 'team-1', true), 

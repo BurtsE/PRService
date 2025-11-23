@@ -25,6 +25,10 @@ func (r *Repository) GetReviewersPRs(ctx context.Context, userID model.UserID) (
 		}
 		prIDs = append(prIDs, prID)
 	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close() // Explicitly close to release the connection before the next loop.
 
 	pullRequests := make([]model.PullRequest, len(prIDs))
 	for index, id := range prIDs {

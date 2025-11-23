@@ -6,23 +6,24 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var _ storage.Storage = (*Repository)(nil)
 
 type Repository struct {
-	c *pgx.Conn
+	c *pgxpool.Pool
 }
 
 func NewRepository(cfg *config.Config) (*Repository, error) {
-	DSN := fmt.Sprintf("host=%s dbname=%s user=%s password=%s sslmode=disable",
-		cfg.Host,
-		cfg.Database,
+	// Use a URL format for the connection string with pgxpool
+	DSN := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable",
 		cfg.User,
 		cfg.Password,
+		cfg.Host,
+		cfg.Database,
 	)
-	c, err := pgx.Connect(context.Background(), DSN)
+	c, err := pgxpool.New(context.Background(), DSN)
 	if err != nil {
 		return nil, err
 	}
@@ -37,5 +38,6 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 }
 
 func (r *Repository) Close(ctx context.Context) error {
-	return r.c.Close(ctx)
+	r.c.Close()
+	return nil
 }
