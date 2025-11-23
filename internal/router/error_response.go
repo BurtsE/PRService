@@ -18,7 +18,7 @@ const (
 	InternalServerError  ErrorCode = "INTERNAL_SERVER_ERROR"
 )
 
-const internalServerErrorMessage = "internal server error"
+const internalServerErrorMessage = "unexpected error occured"
 
 type ErrorResponse struct {
 	Code    ErrorCode `json:"code"`

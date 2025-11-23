@@ -1,10 +1,8 @@
 package prservice
 
 import (
-	"PRService/internal/model"
 	"PRService/internal/service"
 	"PRService/internal/storage"
-	"context"
 
 	"github.com/sirupsen/logrus"
 )
@@ -21,8 +19,4 @@ func NewService(logger *logrus.Logger, storage storage.Storage) *Service {
 		logger:  logger,
 		storage: storage,
 	}
-}
-
-func (s *Service) GetStatistic(ctx context.Context) (model.Statistic, error) {
-	return s.storage.GetStatistic(ctx)
 }

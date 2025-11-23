@@ -8,6 +8,7 @@ tags:
   - name: Users
   - name: PullRequests
   - name: Health
+  - name: Statistics
 
 components:
   parameters:
@@ -43,6 +44,7 @@ components:
                 - NOT_ASSIGNED
                 - NO_CANDIDATE
                 - NOT_FOUND
+                - INTERNAL_SERVER_ERROR
             message:
               type: string
       example:
@@ -120,6 +122,25 @@ components:
         status:
           type: string
           enum: [OPEN, MERGED]
+    Statistic:
+      type: object
+      properties:
+        total_prs:
+          type: integer
+        open_prs:
+          type: integer
+        merged_prs:
+          type: integer
+        total_users:
+          type: integer
+        active_users:
+          type: integer
+        total_teams:
+          type: integer
+        avg_merge_time_seconds:
+          type: number
+          format: double
+
 
 paths:
   /team/add:
@@ -170,6 +191,13 @@ paths:
                 error:
                   code: TEAM_EXISTS
                   message: team_name already exists
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
 
   /team/get:
     get:
@@ -198,6 +226,14 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
 
   /users/setIsActive:
     post:
@@ -239,6 +275,14 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
+
 
   /pullRequest/create:
     post:
@@ -288,6 +332,13 @@ paths:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
               example:
                 error: { code: PR_EXISTS, message: PR id already exists }
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
 
   /pullRequest/merge:
     post:
@@ -324,6 +375,11 @@ paths:
                   mergedAt: 2025-10-24T12:34:56Z
         '404':
           description: PR не найден
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500':
+          description: Внутренняя ошибка сервера
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
@@ -390,6 +446,14 @@ paths:
                   summary: Нет доступных кандидатов
                   value:
                     error: { code: NO_CANDIDATE, message: no active replacement candidate in team }
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
+
 
   /users/getReview:
     get:
@@ -419,3 +483,38 @@ paths:
                     pull_request_name: Add search
                     author_id: u1
                     status: OPEN
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
+
+
+  /statistic:
+    get:
+      tags: [Statistics]
+      summary: Получить общую статистику по сервису
+      responses:
+        '200':
+          description: Объект со статистикой
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistic'
+              example:
+                total_prs: 100
+                open_prs: 20
+                merged_prs: 80
+                total_users: 50
+                active_users: 45
+                total_teams: 5
+                avg_merge_time_seconds: 172800.5
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error: { code: INTERNAL_SERVER_ERROR, message: unexpected error occured }
