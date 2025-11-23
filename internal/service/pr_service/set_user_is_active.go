@@ -18,7 +18,9 @@ func (s *Service) SetUserIsActive(ctx context.Context, user *model.User) error {
 		return err
 	}
 
-	s.reassignInactiveUsersPrs(ctx, user)
+	if !user.IsActive {
+		s.reassignInactiveUsersPrs(ctx, user)
+	}
 
 	return nil
 }

@@ -55,6 +55,12 @@ func (s *Service) ReassignPullRequestReviewer(ctx context.Context,
 		return model.PullRequest{}, err
 	}
 	
+	// Update the reviewers slice on the returned object
+	for i, r := range request.Reviewers {
+		if r == userID {
+			request.Reviewers[i] = newReviewer.ID
+		}
+	}
 
 	return request, nil
 }

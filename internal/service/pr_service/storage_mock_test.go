@@ -30,8 +30,8 @@ func (m *MockStorage) MergePullRequest(ctx context.Context, requestID model.Pull
 	return args.Get(0).(*model.PullRequest), args.Error(1)
 }
 
-func (m *MockStorage) ReassignPullRequestReviewer(ctx context.Context, pullRequest *model.PullRequest, oldReviewerID model.UserID) error {
-	args := m.Called(ctx, pullRequest, oldReviewerID)
+func (m *MockStorage) ReassignPullRequestReviewer(ctx context.Context, pullRequest *model.PullRequest, oldReviewerID, newReviewerID model.UserID) error {
+	args := m.Called(ctx, pullRequest, oldReviewerID, newReviewerID)
 	return args.Error(0)
 }
 
@@ -69,4 +69,9 @@ func (m *MockStorage) SetUserIsActive(ctx context.Context, user *model.User) err
 func (m *MockStorage) UserExists(ctx context.Context, id model.UserID) (bool, error) {
 	args := m.Called(ctx, id)
 	return args.Bool(0), args.Error(1)
+}
+
+func (m *MockStorage) GetUser(ctx context.Context, id model.UserID) (model.User, error) {
+	args := m.Called(ctx, id)
+	return args.Get(0).(model.User), args.Error(1)
 }

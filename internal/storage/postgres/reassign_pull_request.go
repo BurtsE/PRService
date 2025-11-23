@@ -20,11 +20,5 @@ func (r *Repository) ReassignPullRequestReviewer(ctx context.Context,
 		return err
 	}
 
-	for i := range pullRequest.Reviewers {
-		if pullRequest.Reviewers[i] == oldReviewerID {
-			pullRequest.Reviewers[i] = newReviewerID
-		}
-	}
-
 	return nil
 }
