@@ -37,7 +37,7 @@ func NewRepository(cfg *config.Config) (*Repository, error) {
 	}, nil
 }
 
-func (r *Repository) Close(ctx context.Context) error {
+func (r *Repository) Close(_ context.Context) error {
 	r.c.Close()
 	return nil
 }

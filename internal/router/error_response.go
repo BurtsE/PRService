@@ -3,6 +3,7 @@ package router
 import (
 	"PRService/internal/service"
 	"errors"
+
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -18,7 +19,7 @@ const (
 	InternalServerError  ErrorCode = "INTERNAL_SERVER_ERROR"
 )
 
-const internalServerErrorMessage = "unexpected error occured"
+const internalServerErrorMessage = "unexpected error occurred"
 
 type ErrorResponse struct {
 	Code    ErrorCode `json:"code"`

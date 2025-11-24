@@ -81,6 +81,7 @@ func TestMain(m *testing.M) {
 }
 
 func cleanup(t *testing.T) {
+	t.Helper()
 	ctx := context.Background()
 	_, err := testDBPool.Exec(ctx, "TRUNCATE teams, users, pull_requests, pull_request_reviewers RESTART IDENTITY CASCADE")
 	require.NoError(t, err)

@@ -101,7 +101,7 @@ func TestGetTeam(t *testing.T) {
 
 		var resultTeam model.Team
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(bodyBytes, &resultTeam)
+		_ = json.Unmarshal(bodyBytes, &resultTeam)
 		assert.Equal(t, team.Name, resultTeam.Name)
 
 		mockService.AssertExpectations(t)
@@ -218,7 +218,7 @@ func TestMergePullRequest(t *testing.T) {
 
 		var resultPR model.PullRequest
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(bodyBytes, &resultPR)
+		_ = json.Unmarshal(bodyBytes, &resultPR)
 		assert.Equal(t, mergedPR.Status, resultPR.Status)
 
 		mockService.AssertExpectations(t)
@@ -259,7 +259,7 @@ func TestReassignPullRequestReviewer(t *testing.T) {
 
 		var resultPR model.PullRequest
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(bodyBytes, &resultPR)
+		_ = json.Unmarshal(bodyBytes, &resultPR)
 		assert.Contains(t, resultPR.Reviewers, model.UserID("user-3"))
 
 		mockService.AssertExpectations(t)
@@ -301,7 +301,7 @@ func TestGetReview(t *testing.T) {
 			PullRequests []PullRequestDto `json:"pullRequests"`
 		}
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(bodyBytes, &result)
+		_ = json.Unmarshal(bodyBytes, &result)
 
 		assert.Equal(t, string(userID), result.UserID)
 		assert.Len(t, result.PullRequests, 1)
@@ -355,7 +355,7 @@ func TestGetStatistic(t *testing.T) {
 
 		var resultStats model.Statistic
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		json.Unmarshal(bodyBytes, &resultStats)
+		_ = json.Unmarshal(bodyBytes, &resultStats)
 		assert.Equal(t, stats, resultStats)
 
 		mockService.AssertExpectations(t)

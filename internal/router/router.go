@@ -55,4 +55,3 @@ func (r *Router) Start(_ context.Context, addr string) error {
 func (r *Router) Stop(_ context.Context) error {
 	return r.app.Server().Shutdown()
 }
-
